@@ -136,7 +136,7 @@ from tensorflow.keras.optimizers import Adam
 model = Sequential()
 model.add(Embedding(input_dim=vocab_size, output_dim=150, input_length=len_sentence))
 model.add(Dropout(0.2))
-model.add(LSTM(130))
+model.add(LSTM(128))
 model.add(Dropout(0.2))
 model.add(Dense(64, activation="sigmoid"))
 model.add(Dropout(0.2))
