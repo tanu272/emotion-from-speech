@@ -4,8 +4,6 @@
 
 import numpy as np # linear algebra
 import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
-
-import os
 import matplotlib.pyplot as plt
 import seaborn as sns
 import re 
@@ -16,6 +14,12 @@ from tensorflow.keras.preprocessing.text import one_hot
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 from sklearn.preprocessing import OneHotEncoder
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Embedding
+from tensorflow.keras.layers import LSTM
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.layers import Dropout
+from tensorflow.keras.optimizers import Adam
 
 
 test_data = pd.read_csv("./test.txt", header=None, sep=";", names=["Comment","Emotion"], encoding="utf-8")
@@ -65,17 +69,14 @@ val_data.head()
 
 
 vocab_size = 10000
-train_data["length"].max()
+train_data["length"].max() #300
+train_data["length"].min() #7
 
-
-train_data["length"].min()
 len_sentence = 150
 train_data.head()
 
 
 stopwords = set(nltk.corpus.stopwords.words('english'))
-
-
 
 
 def text_prepare(data, column):
@@ -125,18 +126,12 @@ y_test = np.array(y_test)
 y_validate = np.array(y_validate)
 y_test = enc.fit_transform(y_test.reshape(-1,1)).toarray()
 y_validate = enc.fit_transform(y_validate.reshape(-1,1)).toarray()
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Embedding
-from tensorflow.keras.layers import LSTM
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.layers import Dropout
-from tensorflow.keras.optimizers import Adam
 
 
 model = Sequential()
 model.add(Embedding(input_dim=vocab_size, output_dim=150, input_length=len_sentence))
 model.add(Dropout(0.2))
-model.add(LSTM(128))
+model.add(LSTM(130))
 model.add(Dropout(0.2))
 model.add(Dense(64, activation="sigmoid"))
 model.add(Dropout(0.2))
