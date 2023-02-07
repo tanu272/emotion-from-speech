@@ -148,3 +148,4 @@ y_train.shape
 
 
 hist = model.fit(x_train, y_train, epochs = 25, batch_size = 64, validation_data=(x_validate, y_validate),verbose = 1, callbacks= [es, mc])
+model.save('emoprediction.h5')
