@@ -8,20 +8,18 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 import speech_recognition as sr
 
-# downloading a set of stop-words
+# import pre requisites
 STOPWORDS = set(stopwords.words('english'))
-
 DICT_SIZE = 15000
 MAX_LEN = 35
-
 tokenizer = Tokenizer(num_words=DICT_SIZE)
 
+#import model
 model = tf.keras.models.load_model('model.h5')
 model.summary()
 
 emotions_to_labels = {'anger': 0, 'love': 1, 'fear': 2, 'joy': 3, 'sadness': 4,'surprise': 5}
 test = pd.read_csv("./test.txt", header=None, sep=";", names=["Lines","Emotions"], encoding="utf-8")
-
 test['Labels'] = test['Emotions'].replace(emotions_to_labels)
 y_test = test['Labels'].values
 
@@ -33,23 +31,17 @@ def text_preprocess(text, stop_words=False):
 
   return tokens
 
-
+## evaluate model
 x_test = [text_preprocess(t, stop_words=True) for t in test['Lines']]
 X_test = tokenizer.texts_to_sequences(x_test)
 X_test_pad = pad_sequences(X_test, maxlen=MAX_LEN)
 results = model.evaluate(X_test_pad, y_test) 
 print("test loss, test acc:", results)
 
-def text_preprocess(text, stop_words=False):
-  text = re.sub(r'\W+', ' ', text).lower()
-  tokens = word_tokenize(text)
-
-  if stop_words:
-    tokens = [token for token in tokens if token not in STOPWORDS]
-  return tokens
-
 labels_to_emotions = {j:i for i,j in emotions_to_labels.items()}
 
+
+##predict on unseen data
 def predict(texts):
   texts_prepr = [text_preprocess(t) for t in texts]
   sequences = tokenizer.texts_to_sequences(texts_prepr)
@@ -61,7 +53,7 @@ def predict(texts):
     print(f'\'{texts[i]}\' --> {labels_to_emotions[lbl]}')
 
 
-
+##record voice from microphone and use it for prediction
 r = sr.Recognizer()
 m = sr.Microphone()
 
