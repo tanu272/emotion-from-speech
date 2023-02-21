@@ -1,0 +1,15 @@
+{
+    "name": "Emotion_predictor",
+    "description": "An extension to transcribe Google Meet conversations and predict each member's emotions.",
+    "permissions": ["activeTab", "storage", "tabs", "notifications"],
+    "version": "1.0",
+    "manifest_version": 3,
+    "content_scripts": [{
+        "matches": [
+            "https://meet.google.com/*"
+        ],
+        "js": [
+            
+        ]
+    }]
+}
